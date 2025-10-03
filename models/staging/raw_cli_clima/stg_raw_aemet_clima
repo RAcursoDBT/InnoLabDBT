@@ -1,0 +1,24 @@
+{{ config(
+    materialized='incremental',
+    unique_key='ciudad||fecha',
+    on_schema_change='sync'
+) }}
+
+SELECT
+    ciudad,
+    mes,
+    año::INT AS anio,
+    temp_med::FLOAT AS temp_media,
+    precipitacion::FLOAT AS precipitacion_mm,
+    eventos_extremos::INT AS eventos_extremos,
+    riesgo_climatico::FLOAT AS riesgo_climatico,
+    riesgo_total::FLOAT AS riesgo_total,
+    TO_DATE(fecha, 'MM/DD/YYYY') AS fecha,
+    metadata$filename AS origen_fichero
+FROM @AEMET (FILE_FORMAT => 'aemet_csv_format')
+
+{% if is_incremental() %}
+WHERE metadata$filename NOT IN (
+    SELECT DISTINCT origen_fichero FROM {{ this }}
+)
+{% endif %}

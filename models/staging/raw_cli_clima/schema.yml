@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: stg_raw_aemet_clima
+    description: "Datos climáticos y riesgos por ciudad, mes y año"
+    columns:
+      - name: ciudad
+        description: "Nombre de la ciudad"
+        tests:
+          - not_null
+ 
+      - name: mes
+        description: "Mes del registro"
+        tests:
+          - not_null
+        #  - accepted_values:
+         #     values: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+
+      - name: anio
+        description: "Año del registro"
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 2000
+              max_value: 2030
+
+      - name: temp_media
+        description: "Temperatura media en °C"
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: -10
+              max_value: 50
+
+      - name: precipitacion_mm
+        description: "Precipitación en mm"
+        tests:
+          - accepted_range:
+              min_value: 0
+              max_value: 500
+
+      - name: eventos_extremos
+        description: "Número de eventos extremos"
+        tests:
+          - accepted_range:
+              min_value: 0
+              max_value: 50
+
+      - name: riesgo_climatico
+        description: "Índice de riesgo climático"
+        tests:
+          - not_null
+
+      - name: riesgo_total
+        description: "Índice de riesgo total"
+        tests:
+          - not_null
+
+      - name: fecha
+        description: "Fecha del registro"
+        tests:
+          - not_null
